@@ -21,19 +21,12 @@ public class RestTest {
     @Test
     public void getRequestFindCapital() throws JsonException {
 
-        given().when().get("http://www.google.com").then().statusCode(200);
-
-        /*//make get request to fetch capital of norway
-        Response resp = get("http://restcountries.eu/rest/v1/name/norway");
-
-        //Fetching response in JSON
-        JSONArray jsonResponse = new JSONArray(resp.asString());
-
-        //Fetching value of capital parameter
-        String capital = jsonResponse.getJSONObject(0).getString("capital");
-
-        //Asserting that capital of Norway is Oslo
-        Assert.assertEquals(capital, "Oslo");*/
+        given()
+                .contentType(ContentType.JSON)
+                .when().get("http://restcountries.eu/rest/v1/name/norway")
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("Norway"));
     }
 
     @Test
@@ -47,5 +40,18 @@ public class RestTest {
                 .statusCode(200)
                 .body("id", equalTo("viutrial"))
                 .body("partner", equalTo("Trial"));
+    }
+
+    @Test
+    public void responseCheck(){
+        given()
+                .relaxedHTTPSValidation()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("https://jsonplaceholder.typicode.com/users?id=1")
+                .then()
+                .statusCode(200)
+                .body("id",contains(1))
+                .body("name",contains("Leanne Graham"));
     }
 }
